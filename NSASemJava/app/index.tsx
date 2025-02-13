@@ -1,44 +1,90 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Animated,
+  Easing,
+} from 'react-native';
 
-const App = () => {
+const LoginScreen = () => {
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
+  const [buttonScale] = useState(new Animated.Value(1)); // Para animação do botão
 
   const handleLogin = () => {
-    if (email === 'usuario@exemplo.com' && senha === 'senha123') {
-      Alert.alert('Login bem-sucedido');
-    } else {
-      Alert.alert('Erro', 'Usuário ou senha incorretos');
-    }
+    // Lógica para autenticação
+    console.log('Email:', email);
+    console.log('Password:', password);
+
+    // Animação ao pressionar o botão
+    Animated.sequence([
+      Animated.timing(buttonScale, {
+        toValue: 0.95,
+        duration: 100,
+        easing: Easing.ease,
+        useNativeDriver: true,
+      }),
+      Animated.timing(buttonScale, {
+        toValue: 1,
+        duration: 100,
+        easing: Easing.ease,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>Tela de Login</Text>
-      <View style={styles.inputContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Bem-vindo de volta!</Text>
+        <Text style={styles.headerSubtitle}>Faça login para acessar sua conta.</Text>
+      </View>
+
+      <View style={styles.formContainer}>
         <TextInput
           style={styles.input}
           placeholder="Email"
-          keyboardType="email-address"
+          placeholderTextColor="#999"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
         />
         <TextInput
           style={styles.input}
           placeholder="Senha"
+          placeholderTextColor="#999"
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry
-          value={senha}
-          onChangeText={setSenha}
         />
       </View>
-      <TouchableOpacity style={styles.botao} onPress={handleLogin}>
-        <Text style={styles.textoBotao}>Entrar</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.botaoMenor} onPress={handleLogin}>
-        <Text style={styles.textoBotao}>Esqueci a senha</Text>
-      </TouchableOpacity>
-    </View>
+
+      <View style={styles.buttonContainer}>
+        <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+            <Text style={styles.loginButtonText}>Entrar</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
+
+      <View style={styles.linksContainer}>
+        <TouchableOpacity>
+          <Text style={styles.linkText}>Esqueci a senha</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.linkText}>Criar uma conta</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -47,47 +93,74 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f0f4ff',
+    paddingHorizontal: 20,
   },
-  titulo: {
-    fontSize: 24,
+  header: {
+    marginBottom: 40,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 28,
     fontWeight: 'bold',
+    color: '#333',
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 10,
+  },
+  formContainer: {
+    width: '100%',
     marginBottom: 20,
   },
-  inputContainer: {
+  input: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#333',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  buttonContainer: {
     width: '100%',
     alignItems: 'center',
   },
-  input: {
-    width: 350,
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 15,
-    paddingLeft: 10,
-    backgroundColor: '#fff',
-  },
-  botao: {
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
+  loginButton: {
+    backgroundColor: '#6a1b9a',
+    padding: 15,
+    borderRadius: 10,
+    width: '200%',
     alignItems: 'center',
-    width: 350,
+    margin: '40',
+    shadowColor: '#6a1b9a',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
   },
-  textoBotao: {
+  loginButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  botaoMenor: {
-    backgroundColor:'#FFF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    width: 350,
+  linksContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: 20,
+  },
+  linkText: {
+    color: '#6a1b9a',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 
-export default App;
+export default LoginScreen;
