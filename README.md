@@ -1,2 +1,2 @@
-# mobile-II-LucasLiggi
-Aula de mobile com João Siles
+# mobile_II_Lucas_Liggi
+Repositório para as aulas de Mobile II com o professor João Siles
